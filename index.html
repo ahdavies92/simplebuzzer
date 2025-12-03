@@ -40,11 +40,14 @@
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ff5555, #cc0000);
+      background: url(button.png);
+	  background-size: contain;
+	  background-position: center;
+	  background-repeat: no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
+      color: #ffdf00;
       font-size: 24px;
       font-weight: bold;
       text-align: center;
@@ -71,10 +74,10 @@
 <body>
   <div class="ipad-frame">
 	<div class="iframe-container">
-		<div class="buzzer-button" onclick="document.getElementById('buzz').play()">
+		<div class="buzzer-button" onclick="playBuzzer()">
 		BUZZ!
 		</div>
-		<audio id="buzz" src="buzzer.mp3"></audio>
+		<audio id="buzzerAudio"></audio>
 	</div>
 	<div id="soundSelectorContainer">
 	    <label for="soundSelector">Sound:</label>
