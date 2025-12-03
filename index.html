@@ -58,6 +58,14 @@
       transform: scale(0.95);
       box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
+	#soundSelectorContainer {
+	  position: fixed;
+	  bottom: 100px;
+	}
+	select {
+	  font-size: 18px;
+	  padding: 6px 10px;
+	}
   </style>
 </head>
 <body>
@@ -68,6 +76,44 @@
 		</div>
 		<audio id="buzz" src="buzzer.mp3"></audio>
 	</div>
+	<div id="soundSelectorContainer">
+	    <label for="soundSelector">Sound:</label>
+	    <select id="soundSelector"></select>
+	</div>
   </div>
+  <script>
+	// Load list of sounds
+	fetch('sounds.json')
+	  .then(response => response.json())
+	  .then(sounds => {
+		const selector = document.getElementById('soundSelector');
+		const audio = document.getElementById('buzzerAudio');
+
+		// Populate dropdown
+		sounds.forEach(filename => {
+		  const option = document.createElement('option');
+		  option.value = filename;
+		  option.textContent = filename;
+		  selector.appendChild(option);
+		});
+
+		// Set default sound
+		if (sounds.length > 0) {
+		  audio.src = sounds[0];
+		}
+
+		// When user selects a different sound
+		selector.addEventListener('change', () => {
+		  audio.src = selector.value;
+		});
+	  })
+	  .catch(err => console.error('Could not load sounds.json:', err));
+
+	function playBuzzer() {
+	  const audio = document.getElementById('buzzerAudio');
+	  audio.currentTime = 0;
+	  audio.play();
+	}
+  </script>
 </body>
 </html>
