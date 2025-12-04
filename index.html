@@ -4,78 +4,74 @@
   <meta charset="UTF-8">
   <title>Team A Buzzer</title>
   <style>
-	body {
-		margin: 0;
-		padding: 0;
-		justify-content: center; /* center horizontally */
-		align-items: center;     /* center vertically */
-		height: 100vh;
-		width: auto;
-		background-color: #000000;
+		body {
+			margin: 0;
+			padding: 0;
+			justify-content: center; /* center horizontally */
+			align-items: center;     /* center vertically */
+			height: 100vh;
+			width: 100vw;
+			background-color: #000000;
     }
-
-    /* iPad-like container */
     .ipad-frame {
-		position: relative;
-		aspect-ratio: 768/1024;
-		width: auto;
-		height: 100%;       /* always fill full viewport height */
-		max-width: 768px;   /* optional limit for huge monitors */
-		max-height: 96vh;
-		margin: 0 auto;
-		border: 2vh solid #333333; /* optional frame/border */
-		border-radius: 40px;         /* rounded corners */
-		background-image: url("bg.png");
-		background-color: #f0f0f0;
-		background-size: cover;
-		background-position: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+			position: relative;
+			aspect-ratio: 768/1024;
+			width: auto;
+			height: 100%;       /* always fill full viewport height */
+			max-width: calc(96* var(--scale));   /* optional limit for huge monitors */
+			max-height: calc(96* var(--scale));
+			margin: 0 auto;
+			border: calc(2* var(--scale)) solid #333333; /* optional frame/border */
+			border-radius: calc(6* var(--scale));         /* rounded corners */
+			background-image: url("bg.png");
+			background-color: #f0f0f0;
+			background-size: cover;
+			background-position: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
     }
-
-	.buzzer-button {
-		position: absolute;
-		width: 30vh;
-		height: 30vh;
-		max-width: 300px;
-		max-height: 300px;
-		min-width: 100px;
-		min-height: 100px;
-		border-radius: 50%;
-		background: url(button.png);
-		background-size: contain;
-		background-position: center;
-		background-repeat: no-repeat;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		cursor: pointer;
-		user-select: none;
-		box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-		transition: transform 0.1s, box-shadow 0.1s;
-		margin-top: 30%;
-    }
-
+		.buzzer-button {
+			position: absolute;
+			width: calc(30* var(--scale));
+			height: calc(30* var(--scale));
+			max-width: 300px;
+			max-height: 300px;
+			min-width: 100px;
+			min-height: 100px;
+			border-radius: 50%;
+			background: url(button.png);
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			user-select: none;
+			box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+			transition: transform 0.1s, box-shadow 0.1s;
+			margin-top: 30%;
+		}
     .buzzer-button:active {
-		transform: scale(0.95);
-		box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+			transform: scale(0.95);
+			box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
-	#soundSelectorContainer {
-		position: absolute;
-		font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
-		width: 90%;
-		left: 6%;
-		bottom: 2%;
-		font-size: 3vh;
-		margin-bottom: 3vh;
-		color: #ffffff;
-	}
-	select {
-		font-size: inherit;
-		width: 80%;
-		padding: 0.4em 0.8em;
-	}
+		#soundSelectorContainer {
+			position: absolute;
+			font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+			width: 90%;
+			left: 6%;
+			bottom: 2%;
+			font-size: calc(3* var(--scale));;
+			margin-bottom: calc(3* var(--scale));;
+			color: #ffffff;
+		}
+		select {
+			font-size: inherit;
+			width: 80%;
+			padding: 0.4em 0.8em;
+		}
   </style>
 </head>
 <body>
@@ -88,38 +84,52 @@
 	</div>
   </div>
   <script>
-	// Load list of sounds
-	fetch('sounds.json')
-	  .then(response => response.json())
-	  .then(sounds => {
-		const selector = document.getElementById('soundSelector');
-		const audio = document.getElementById('buzzerAudio');
-
-		// Populate dropdown
-		sounds.forEach(filename => {
-		  const option = document.createElement('option');
-		  option.value = filename;
-		  option.textContent = filename;
-		  selector.appendChild(option);
-		});
-
-		// Set default sound
-		if (sounds.length > 0) {
-		  audio.src = "sounds/"+sounds[0];
+		// Load list of sounds
+		fetch('sounds.json')
+		  .then(response => response.json())
+		  .then(sounds => {
+			const selector = document.getElementById('soundSelector');
+			const audio = document.getElementById('buzzerAudio');
+	
+			// Populate dropdown
+			sounds.forEach(filename => {
+			  const option = document.createElement('option');
+			  option.value = filename;
+			  option.textContent = filename;
+			  selector.appendChild(option);
+			});
+	
+			// Set default sound
+			if (sounds.length > 0) {
+			  audio.src = "sounds/"+sounds[0];
+			}
+	
+			// When user selects a different sound
+			selector.addEventListener('change', () => {
+			  audio.src = "sounds/"+selector.value;
+			});
+		  })
+		  .catch(err => console.error('Could not load sounds.json:', err));
+		  
+		function playBuzzer() {
+		  const audio = document.getElementById('buzzerAudio');
+		  audio.currentTime = 0;
+		  audio.play();
 		}
-
-		// When user selects a different sound
-		selector.addEventListener('change', () => {
-		  audio.src = "sounds/"+selector.value;
-		});
-	  })
-	  .catch(err => console.error('Could not load sounds.json:', err));
-
-	function playBuzzer() {
-	  const audio = document.getElementById('buzzerAudio');
-	  audio.currentTime = 0;
-	  audio.play();
-	}
+		  function updateScale() {
+			const targetAR = 768 / 1024;
+			const actualAR = window.innerWidth / window.innerHeight;
+	
+			if (actualAR < targetAR) {
+				// Screen is narrower → use width scaling
+				document.documentElement.style.setProperty('--scale', '1vw');
+			} else {
+				// Screen is wider → use height scaling
+				document.documentElement.style.setProperty('--scale', '1vh');
+			}
+	  }
+	  window.addEventListener('resize', updateScale);
+	  updateScale();
   </script>
 </body>
 </html>
