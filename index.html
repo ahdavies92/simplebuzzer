@@ -116,16 +116,18 @@
 		  audio.currentTime = 0;
 		  audio.play();
 		}
-		  function updateScale() {
+		function updateScale() {
+			const realVH = window.innerHeight / 100;
+    	const realVW = window.innerWidth / 100;
 			const targetAR = 768 / 1024;
 			const actualAR = window.innerWidth / window.innerHeight;
 	
 			if (actualAR < targetAR) {
-				// Screen is narrower → use width scaling
-				document.documentElement.style.setProperty('--scale', '1vw');
+			// Screen is narrower → use width scaling
+			document.documentElement.style.setProperty('--scale', realVW + "px");
 			} else {
 				// Screen is wider → use height scaling
-				document.documentElement.style.setProperty('--scale', '1vh');
+				document.documentElement.style.setProperty('--scale', realVH + "px");
 			}
 	  }
 	  window.addEventListener('resize', updateScale);
